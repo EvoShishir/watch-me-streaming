@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "WatchMe",
-    "slug": "WatchMe",
+    "name": "NotFlix",
+    "slug": "NotFlix",
     "version": "1.0.0",
     "orientation": "default",
     "icon": "./assets/images/icon.png",
-    "scheme": "watchme",
+    "scheme": "NotFlix",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -23,7 +23,7 @@
         "android.permission.RECORD_AUDIO",
         "android.permission.MODIFY_AUDIO_SETTINGS"
       ],
-      "package": "com.evoshishir.WatchMe"
+      "package": "com.evoshishir.NotFlix"
     },
     "web": {
       "bundler": "metro",
@@ -48,7 +48,15 @@
           "supportsPictureInPicture": true
         }
       ],
-      "expo-audio"
+      "expo-audio",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

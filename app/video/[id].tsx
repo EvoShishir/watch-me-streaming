@@ -151,6 +151,20 @@ export default function VideoDetailScreen() {
         <View style={styles.contentSection}>
           <Text style={styles.description}>{video.description}</Text>
 
+          {/* Episodes Section (for TV shows) */}
+          {video.type === "tv" && (video as TVShow).seasons && (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Episodes</Text>
+              {(video as TVShow).seasons.map((season) => (
+                <SeasonRow
+                  key={season.seasonNumber}
+                  season={season}
+                  onEpisodePress={handleEpisodePress}
+                />
+              ))}
+            </View>
+          )}
+
           {/* Quality Information */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Quality</Text>
@@ -180,20 +194,6 @@ export default function VideoDetailScreen() {
             <Text style={styles.sectionTitle}>Cast & Crew</Text>
             <Text style={styles.sectionText}>Coming Soon</Text>
           </View>
-
-          {/* Episodes Section (for TV shows) */}
-          {video.type === "tv" && (video as TVShow).seasons && (
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Episodes</Text>
-              {(video as TVShow).seasons.map((season) => (
-                <SeasonRow
-                  key={season.seasonNumber}
-                  season={season}
-                  onEpisodePress={handleEpisodePress}
-                />
-              ))}
-            </View>
-          )}
         </View>
       </ScrollView>
     </View>
