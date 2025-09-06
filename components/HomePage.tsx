@@ -3,7 +3,6 @@ import { useRouter } from "expo-router";
 import React, { useCallback, useMemo } from "react";
 import {
   ActivityIndicator,
-  Dimensions,
   FlatList,
   Pressable,
   StatusBar,
@@ -11,10 +10,8 @@ import {
   Text,
   View,
 } from "react-native";
-import FeaturedHero from "./FeaturedHero";
+import FeaturedCarousel from "./FeaturedCarousel";
 import OptimizedCategoryRow from "./OptimizedCategoryRow";
-
-const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 interface HomePageProps {
   onVideoPress: (videoId: string) => void;
@@ -25,13 +22,18 @@ export default function HomePage({ onVideoPress, onPlayVideo }: HomePageProps) {
   const { categories, loading, error, refetch } = useData();
   const router = useRouter();
 
-  const featuredVideo = useMemo(() => {
-    return categories.find((cat) => cat.id === "trending")?.videos[0];
+  const recentlyUpdatedVideos = useMemo(() => {
+    const recentlyAddedCategory = categories.find(
+      (cat) => cat.id === "recently-added"
+    );
+    return recentlyAddedCategory?.videos || [];
   }, [categories]);
 
-  // Show more categories on homepage
+  // Show more categories on homepage (excluding trending and recently-added)
   const displayCategories = useMemo(() => {
-    return categories.slice(0, 10); // Show first 10 categories
+    return categories
+      .filter((cat) => cat.id !== "trending" && cat.id !== "recently-added") // Remove trending and recently-added categories
+      .slice(0, 10); // Show first 10 categories
   }, [categories]);
 
   const renderCategoryItem = useCallback(
@@ -57,16 +59,16 @@ export default function HomePage({ onVideoPress, onPlayVideo }: HomePageProps) {
   const renderHeader = useCallback(
     () => (
       <>
-        {featuredVideo && (
-          <FeaturedHero
-            video={featuredVideo}
-            onPlayPress={() => onPlayVideo(featuredVideo.id)}
-            onInfoPress={() => onVideoPress(featuredVideo.id)}
+        {recentlyUpdatedVideos.length > 0 && (
+          <FeaturedCarousel
+            videos={recentlyUpdatedVideos}
+            onPlayPress={(video) => onPlayVideo(video.id)}
+            onInfoPress={(video) => onVideoPress(video.id)}
           />
         )}
       </>
     ),
-    [featuredVideo, onPlayVideo, onVideoPress]
+    [recentlyUpdatedVideos, onPlayVideo, onVideoPress]
   );
 
   const renderFooter = useCallback(
